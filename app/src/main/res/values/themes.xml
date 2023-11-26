@@ -1,0 +1,19 @@
+<resources >
+    <!-- Base application theme. -->
+    <style name = "Base.Theme.Dedrone" parent = "Theme.Material3.DayNight.NoActionBar" >
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style >
+
+    <style name = "Theme.Dedrone" parent = "Base.Theme.Dedrone" />
+    <style name = "Theme.Dedrone.Fullscreen" parent = "Theme.Dedrone" >
+        <item name = "android:actionBarStyle" >@style/Widget.Theme.Dedrone.ActionBar.Fullscreen</item >
+        <item name = "android:windowActionBarOverlay" >true</item >
+        <item name = "android:windowBackground" >@null</item >
+    </style >
+
+    <style name = "ThemeOverlay.Dedrone.FullscreenContainer" parent = "" >
+        <item name = "fullscreenBackgroundColor" >@color/light_blue_600</item >
+        <item name = "fullscreenTextColor" >@color/light_blue_A200</item >
+    </style >
+</resources >
