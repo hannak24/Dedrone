@@ -38,6 +38,7 @@ import com.example.dedrone.databinding.ActivityMainBinding
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.camera.camera2.interop.Camera2Interop
+import com.google.firebase.auth.FirebaseAuth
 
 
 data class LocalCamera(
@@ -70,11 +71,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var objectDetectorHelper: ObjectDetectorHelper2
     private lateinit var droneAlert: DroneAlert
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+        auth = FirebaseAuth.getInstance()
 
         // Request camera permissions
         if (allPermissionsGranted()) {
