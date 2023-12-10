@@ -4,6 +4,7 @@ import android.Manifest
 import android.R
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -78,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
         auth = FirebaseAuth.getInstance()
+        Log.d(TAG, "logged in")
 
         // Request camera permissions
         if (allPermissionsGranted()) {
@@ -101,6 +103,52 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop called")
+        // Sign out from Firebase when the activity is stopped
+        auth.signOut()
+    }
+
+//    override fun onResume() {
+//        super.onResume()
+//
+//        // Check if the user is authenticated
+//        val currentUser = auth.currentUser
+//
+//        if (currentUser == null) {
+//            // If not authenticated, navigate to the login activity
+//            val loginIntent = Intent(this, LoginActivity::class.java)
+//            startActivity(loginIntent)
+//            finish()  // Finish the current activity to prevent the user from coming back using the back button
+//        } else {
+//            // Initialize view components if not already initialized
+//            if (!::viewBinding.isInitialized) {
+//                viewBinding = ActivityMainBinding.inflate(layoutInflater)
+//                setContentView(viewBinding.root)
+//
+//
+//                // Initialize other views if needed
+//                // For example: viewBinding.textView = findViewById(R.id.textView)
+//            }
+//
+//            // Continue with your existing onResume logic
+//            if (viewBinding.viewFinder != null && viewBinding.viewFinder.display != null) {
+//                val display = viewBinding.viewFinder.display
+//                val rotation = display.rotation
+//                // Continue with your logic that uses rotation
+//
+//                // Add your additional onResume logic here
+//            } else {
+//                Log.e(TAG, "View components are null or not properly initialized.")
+//            }
+//        }
+//    }
+
+
+
+
 
     private fun initDetection() {
         objectDetectorHelper = ObjectDetectorHelper2(
@@ -356,6 +404,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.d(TAG, "onDestroy called")
+        auth.signOut()
         cameraExecutor.shutdown()
     }
 

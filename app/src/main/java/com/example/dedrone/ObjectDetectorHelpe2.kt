@@ -37,7 +37,7 @@ class ObjectDetectorHelper2(
 ) {
 
     private var threshold: Float = CONFIDENCE_THRESHOLD
-    private val modelPath = "yolov8n_f32.tflite"
+    private val modelPath = "best_float32.tflite"
     private lateinit var interpreter: Interpreter
     private val TAG = "ObjectDetectionHelper2"
     private val imageProcessor = ImageProcessor.Builder()
@@ -187,8 +187,8 @@ class ObjectDetectorHelper2(
 
 
     companion object {
-        private const val TENSOR_WIDTH = 1024
-        private const val TENSOR_HEIGHT = 1024
+        private const val TENSOR_WIDTH = 1056
+        private const val TENSOR_HEIGHT = 1056
         private const val TENSOR_WIDTH_FLOAT = TENSOR_WIDTH.toFloat()
         private const val TENSOR_HEIGHT_FLOAT = TENSOR_HEIGHT.toFloat()
 
@@ -198,7 +198,7 @@ class ObjectDetectorHelper2(
         private val INPUT_IMAGE_TYPE = DataType.FLOAT32
         private val OUTPUT_IMAGE_TYPE = DataType.FLOAT32
 
-        private const val NUM_ELEMENTS = 21504
+        private const val NUM_ELEMENTS = 22869
         const val CONFIDENCE_THRESHOLD = 0.5F
         private const val IOU_THRESHOLD = 0.5F
 
