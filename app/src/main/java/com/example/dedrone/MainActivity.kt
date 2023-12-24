@@ -39,7 +39,10 @@ import com.example.dedrone.databinding.ActivityMainBinding
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.camera.camera2.interop.Camera2Interop
+import com.example.dedrone.ObjectDetectorHelper2.Companion.CONFIDENCE_THRESHOLD
 import com.google.firebase.auth.FirebaseAuth
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 data class LocalCamera(
@@ -169,7 +172,20 @@ class MainActivity : AppCompatActivity() {
                     imageHeight: Int,
                     imageWidth: Int
                 ) {
-                    Log.d(TAG, "onResults: $inferenceTime")
+                    val currentTimestamp = LocalDateTime.now()
+
+                    // Define a format for the timestamp
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+
+                    // Format the timestamp using the defined format
+                    val formattedTimestamp = currentTimestamp.format(formatter)
+
+                    if(results != null) {
+                        Log.d(TAG, "Inference time: $inferenceTime")
+                        Log.d(TAG, "Drone detected at the time: $formattedTimestamp")
+                        Log.d(TAG, "The threshold is: $CONFIDENCE_THRESHOLD")
+                        Log.d(TAG, "Drone detected in the bbox: $results")
+                    }
                     onDrone(results)
                     droneAlert.onDrone(results)
                 }
