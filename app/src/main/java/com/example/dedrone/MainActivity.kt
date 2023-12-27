@@ -3,6 +3,7 @@ package com.example.dedrone
 import android.Manifest
 import android.R
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -40,9 +41,15 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.camera.camera2.interop.Camera2Interop
 import com.example.dedrone.ObjectDetectorHelper2.Companion.CONFIDENCE_THRESHOLD
+import com.example.dedrone.LogcatHelper.Companion.MAX_FILE_SIZE
+import com.example.dedrone.LogcatHelper.Companion.MAX_FOLDER_SIZE
 import com.google.firebase.auth.FirebaseAuth
+import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
+import java.nio.file.Paths
 
 
 data class LocalCamera(
@@ -74,6 +81,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityMainBinding
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var objectDetectorHelper: ObjectDetectorHelper2
+    private lateinit var logcatHelper: LogcatHelper
     private lateinit var droneAlert: DroneAlert
     private lateinit var auth: FirebaseAuth
 
@@ -83,10 +91,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(viewBinding.root)
         auth = FirebaseAuth.getInstance()
         Log.d(TAG, "logged in")
-
+        saveLogcat()
         // Request camera permissions
         if (allPermissionsGranted()) {
             initDetection()
+
         } else {
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
@@ -149,7 +158,52 @@ class MainActivity : AppCompatActivity() {
 //        }
 //    }
 
+    private fun saveToFile(inferenceTime: Long, formattedTimestamp: String,
+                           confidence_threshold: Float, bboxes: List<BoundingBox> ) {
+        try {
 
+            
+
+            // Get the directory for the app's private files
+            val directory = File("/Android/data/your.package.name/files/")
+
+
+            // Create a file named "log.txt" in the app's files directory
+            val file = File(directory, "log.txt")
+
+
+
+            // Create a FileOutputStream to write to the file
+            val fileOutputStream = FileOutputStream(file, true)
+
+            // Create an OutputStreamWriter to write text to the file
+            val outputStreamWriter = OutputStreamWriter(fileOutputStream)
+            
+            outputStreamWriter.write("Drone detected at the time: $formattedTimestamp\n")
+            outputStreamWriter.write("\n")
+            outputStreamWriter.write("Inference time: $inferenceTime\n")
+            outputStreamWriter.write("The threshold is: $confidence_threshold\n")
+            outputStreamWriter.write("Drone detected in the bboxes: $bboxes\n")
+            outputStreamWriter.write("\n\n")
+
+            // Close the streams
+            outputStreamWriter.close()
+            fileOutputStream.close()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun saveLogcat(){
+        Log.d(TAG, "save logcat started")
+        logcatHelper = LogcatHelper(
+            context = this,
+            maxFileSize = MAX_FILE_SIZE, // 2 MB
+            maxFolderSize = MAX_FOLDER_SIZE, // 10 MB
+        )
+        //logcatHelper.getLogFile()
+    }
 
 
 
@@ -184,7 +238,8 @@ class MainActivity : AppCompatActivity() {
                         Log.d(TAG, "Inference time: $inferenceTime")
                         Log.d(TAG, "Drone detected at the time: $formattedTimestamp")
                         Log.d(TAG, "The threshold is: $CONFIDENCE_THRESHOLD")
-                        Log.d(TAG, "Drone detected in the bbox: $results")
+                        Log.d(TAG, "Drone detected in the bboxes: $results")
+                        saveToFile(inferenceTime, formattedTimestamp, CONFIDENCE_THRESHOLD, results)
                     }
                     onDrone(results)
                     droneAlert.onDrone(results)
