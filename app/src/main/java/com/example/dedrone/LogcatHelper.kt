@@ -11,6 +11,8 @@ import java.io.*
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 sealed class Result<out R> {
     data class Success<out T>(val data: T) : Result<T>()
@@ -242,8 +244,34 @@ class LogcatHelper(
             }
         }
 
+        private fun formattedTimestamp(): String {
+            val currentTimestamp: LocalDateTime = LocalDateTime.now()
+
+            // Define a format for the timestamp
+            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+
+            // Format the timestamp using the defined format
+            val formattedTimestamp: String = currentTimestamp.format(formatter)
+
+            return formattedTimestamp
+        }
+
+
+
+
+
+//        private fun createLogFile(dir: String) =
+//            File(dir, "logcat_" + System.currentTimeMillis() + ".txt")
+
         private fun createLogFile(dir: String) =
-            File(dir, "logcat_" + System.currentTimeMillis() + ".txt")
+            File(dir, "logcat_" + formattedTimestamp() + ".txt")
+
+//        private fun createLogFile(dir: String) {
+//            Log.d(TAG, "formattedTimestamp: $formattedTimestamp")
+//            Log.d(TAG, "log file created with the name: $formattedTimestamp.txt")
+//            File(dir, "$formattedTimestamp.txt")
+//        }
+
 
         private fun deleteOldestFile(path: String) {
             val directory = File(path)
