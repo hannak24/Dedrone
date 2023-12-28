@@ -176,7 +176,8 @@ class LogcatHelper(
                 e.printStackTrace()
             }
             Log.d(TAG, "init logging")
-            command = "logcat | grep \"($pID)\""
+            //command = "logcat | grep \"($pID)\""
+            command = "logcat -s CameraX-MLKit"
             clearLogCommand = "logcat -c"
         }
 
@@ -248,7 +249,7 @@ class LogcatHelper(
             val currentTimestamp: LocalDateTime = LocalDateTime.now()
 
             // Define a format for the timestamp
-            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
             // Format the timestamp using the defined format
             val formattedTimestamp: String = currentTimestamp.format(formatter)

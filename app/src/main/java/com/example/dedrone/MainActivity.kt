@@ -43,6 +43,7 @@ import androidx.camera.camera2.interop.Camera2Interop
 import com.example.dedrone.ObjectDetectorHelper2.Companion.CONFIDENCE_THRESHOLD
 import com.example.dedrone.LogcatHelper.Companion.MAX_FILE_SIZE
 import com.example.dedrone.LogcatHelper.Companion.MAX_FOLDER_SIZE
+import com.example.dedrone.ObjectDetectorHelper2.Companion.UPDATED_THRESHOLD
 import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 import java.time.LocalDateTime
@@ -237,9 +238,9 @@ class MainActivity : AppCompatActivity() {
                     if(results != null) {
                         Log.d(TAG, "Inference time: $inferenceTime")
                         Log.d(TAG, "Drone detected at the time: $formattedTimestamp")
-                        Log.d(TAG, "The threshold is: $CONFIDENCE_THRESHOLD")
+                        Log.d(TAG, "The threshold is: $UPDATED_THRESHOLD")
                         Log.d(TAG, "Drone detected in the bboxes: $results")
-                        saveToFile(inferenceTime, formattedTimestamp, CONFIDENCE_THRESHOLD, results)
+                        saveToFile(inferenceTime, formattedTimestamp, UPDATED_THRESHOLD, results)
                     }
                     onDrone(results)
                     droneAlert.onDrone(results)
@@ -252,6 +253,7 @@ class MainActivity : AppCompatActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val threshold = progress / 100f
                 objectDetectorHelper.setThreshold(threshold)
+                UPDATED_THRESHOLD = threshold
                 viewBinding.sensitivityText.text = "Threshold: $threshold"
                 Log.d(TAG, "new threshold: $threshold")
             }

@@ -201,6 +201,7 @@ class ObjectDetectorHelper2(
         private const val NUM_ELEMENTS = 22869
         const val CONFIDENCE_THRESHOLD = 0.5F
         private const val IOU_THRESHOLD = 0.5F
+        var UPDATED_THRESHOLD = 0.5F
 
     }
 
